@@ -43,23 +43,35 @@ module Metafeta
         metafeta_store[tag] ||= []
         metafeta_store[tag].push(*attributes).uniq!
       end
+    end
 
-      # Syntactic sugar for defining metadata. Intended to be used as follows:
-      #
-      #   Dog.add_metafeta do
-      #     tag_attribute :colour, :as => :identifying_features
-      #   end
-      #
-      # This sugar allows for storing metadata definitions in a seperate file
-      # in a more obvious way
-      def add_metafeta(&block)
-        instance_eval(&block)
-      end
+    # Syntactic sugar for defining metadata. Intended to be used as follows:
+    #
+    #   Dog.add_metafeta do
+    #     tag_attribute :colour, :as => :identifying_features
+    #   end
+    #
+    # This sugar allows for storing metadata definitions in a seperate file
+    # in a more obvious way
+    def add_metafeta(&block)
+      instance_eval(&block)
     end
 
     # A convenience method for accessing the metadata hash
+    # Note:
+    # Metadata will be inherited from a superclass that has metadata defined
     def metafeta_store
+      # This condition ensures that subclasses copy their superclass's metadata as long as superclasses are defined to include Metafeta.
+      if instance_variable_get(:@_metafeta_store).nil? && superclass.respond_to?(:metafeta_store)
+        instance_variable_set(:@_metafeta_store, superclass.metafeta_store.dup)
+      end
       instance_variable_get(:@_metafeta_store)
+    end
+
+    # Given that metadata is inherited we may want to be able to clear
+    # out any inherited tags. This method allows you to do so.
+    def clear_tag(tag)
+      metafeta_store.delete(tag)
     end
   end
 

@@ -1,3 +1,5 @@
+require 'lib/metafeta.rb'
+
 describe Metafeta do
   describe '#tag_attribute' do
     before(:each) do
@@ -58,6 +60,42 @@ describe Metafeta do
     it "returns the metafeta_store hash" do
       DogE.metafeta_store.should == {:a_tag => [:colours]}
     end
+
+    context "when a subclass has no metadata defined" do
+      before(:each) do
+        class DogEA
+          include Metafeta
+          tag_attribute :name, :as => :identifying
+        end
+
+        class DogEASub < DogEA; end
+      end
+
+      it "inherits it's superclass's metadata" do
+        DogEASub.metafeta_store.should == {:identifying => [:name]}
+      end
+    end
+
+    context "when a subclass has metadata" do
+      before(:each) do
+        class DogEB
+          include Metafeta
+          tag_attribute :name, :as => :identifying
+        end
+
+        class DogEBSub < DogEB
+          tag_attribute :colour, :as => :identifying
+        end
+      end
+
+      it "mixes it's metadata with that which it inherited" do
+        DogEBSub.metafeta_store.should == {:identifying => [:name, :colour]}
+      end
+
+      it "does not mix the subclass metadata into the superclass's metadata" do
+        DogEB.metafeta_store.should == {:identifying => [:name]}
+      end
+    end
   end
 
   describe '#attributes_for_tag' do
@@ -86,6 +124,31 @@ describe Metafeta do
         end
       end.should_not raise_error
       DogG.new.attribute_tagged_with?(:colour, :external_stuff).should be_true
+    end
+  end
+
+  describe '.clear_tag' do
+    context "when a superclass has metadata" do
+      before(:each) do
+        class DogF
+          include Metafeta
+          tag_attribute :colour, :as => :external_features
+        end
+
+        class DogFSub
+          include Metafeta
+          clear_tag(:fur)
+          tag_attribute :fur, :as => :external_features
+        end
+      end
+
+      it "clears the metadata in the class its called in" do
+        DogFSub.metafeta_store.should == {:external_features => [:fur]}
+      end
+
+      it "does not clear the metadata in the superclass" do
+        DogF.metafeta_store.should == {:external_features => [:colour]}
+      end
     end
   end
 end
