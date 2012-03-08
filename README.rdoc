@@ -17,31 +17,37 @@ will have views and calculations adapt as our models change.
 = Examples
 You start by declaring your metadata. We do this in `app/metadata` (seperate from our model classes):
 
-  Employee.add_metafeta do
-    tag_attribute :name, :as => :identity
-    tag_attribute :iq,
-                  :years_employed,
-                  :as => :competence
+  Demographics.add_metafeta do
+    tag_attribute :number_of_male_black_senior_managers,
+                  :number_of_female_black_senior_managers,
+                  :number_of_male_white_senior_managers,
+                  :number_of_female_white_senior_managers,
+                  :as => :senior_managers, :aggregatable
+
+    tag_attribute :number_of_male_black_junior_managers,
+                  :number_of_female_black_junior_managers,
+                  :number_of_male_white_junior_managers,
+                  :number_of_female_white_junior_managers,
+                  :as => :junior_managers, :aggregatable
   end
 
 Now that the fields are marked up we can access the metadata as follows:
 
-  @employee.attributes_for_tag(:competence)
-  => [:iq, :years_employed]
+  @employee.attributes_for_tag(:senior_managers)
+  => [:number_of_male_black_senior_managers, :number_of_female_black_senior_managers, :number_of_male_white_senior_managers, :number_of_female_white_senior_managers]
 
 You can also check whether an attribute has a tag:
 
-  @employee.attributes_tagged_with?(:iq, :competence)
+  @employee.attributes_tagged_with?(:number_of_male_black_senior_managers, :senior_managers)
   => true
 
 = To come
 Perhaps some syntactic sugar like:
 
-  @employee.attribute(:iq).tagged_as?(:competence)
+  @employee.attribute(:number_of_male_black_senior_managers).tagged_as?(:aggregatable)
   => true
 
-  @employee.competence_fields
-  => [:iq, years_employed]
-
+  @employee.senior_manager_fields
+  => [:number_of_male_black_senior_managers, :number_of_female_black_senior_managers, :number_of_male_white_senior_managers, :number_of_female_white_senior_managers]
 
   
