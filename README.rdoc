@@ -43,10 +43,10 @@ You can also check whether an attribute has a tag:
 = To come
 Perhaps some syntactic sugar like:
 
-  @employee.attribute(:number_of_male_black_senior_managers).tagged_as?(:aggregatable)
+  @demographic.attribute(:number_of_male_black_senior_managers).tagged_as?(:aggregatable)
   => true
 
-  @employee.senior_manager_fields
+  @demographic.senior_manager_fields
   => [:number_of_male_black_senior_managers, :number_of_female_black_senior_managers, :number_of_male_white_senior_managers, :number_of_female_white_senior_managers]
 
   
