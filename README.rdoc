@@ -1,0 +1,47 @@
+= Metafata
+This library allows you to add metadata to the attributes of a class by tagging them.
+The fields can then be retreived by tag or inspected to see what groups they belong to. 
+The idea is that With fields grouped in this way you are able to metaprogram more declaratively.
+
+= Whats with the obscure names?
+Simple really, 'metadata' and 'tag' are likely to be method names that people will want
+ to use :)
+
+= Why?
+We run some applications that are data field intensive. This posed 2 problems:
+* Forms were large and onerous to update
+* Calculations that aggregated groups of data were brittle & lengthy
+By adding metadata to the fields on a model we are able to write some simple metaprogramming that
+will have views and calculations adapt as our models change.
+
+= Examples
+You start by declaring your metadata. We do this in `app/metadata` (seperate from our model classes):
+
+  Employee.add_metafeta do
+    tag_attribute :name, :as => :identity
+    tag_attribute :iq,
+                  :years_employed,
+                  :as => :competence
+  end
+
+Now that the fields are marked up we can access the metadata as follows:
+
+  @employee.attributes_for_tag(:competence)
+  => [:iq, :years_employed]
+
+You can also check whether an attribute has a tag:
+
+  @employee.attributes_tagged_with?(:iq, :competence)
+  => true
+
+= To come
+Perhaps some syntactic sugar like:
+
+  @employee.attribute(:iq).tagged_as?(:competence)
+  => true
+
+  @employee.competence_fields
+  => [:iq, years_employed]
+
+
+  
