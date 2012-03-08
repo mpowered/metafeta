@@ -61,8 +61,11 @@ module Metafeta
     # Note:
     # Metadata will be inherited from a superclass that has metadata defined
     def metafeta_store
-      # This condition ensures that subclasses copy their superclass's metadata as long as superclasses are defined to include Metafeta.
-      if instance_variable_get(:@_metafeta_store).nil? && superclass.respond_to?(:metafeta_store)
+      # This condition ensures that subclasses copy their superclass's metadata.
+      # Since subclasses don't need to call 'include Metafeta' they won't have had
+      # their @_metafeta_store initialized so we initialize their store the first
+      # time it is accessed.
+      if instance_variable_get(:@_metafeta_store).nil?
         instance_variable_set(:@_metafeta_store, superclass.metafeta_store.dup)
       end
       instance_variable_get(:@_metafeta_store)
