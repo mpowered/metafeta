@@ -130,12 +130,12 @@ describe Metafeta do
   describe '.clear_tag' do
     context "when a superclass has metadata" do
       before(:each) do
-        class DogF
+        class DogH
           include Metafeta
           tag_attribute :colour, :as => :external_features
         end
 
-        class DogFSub
+        class DogHSub < DogH
           include Metafeta
           clear_tag(:fur)
           tag_attribute :fur, :as => :external_features
@@ -143,12 +143,25 @@ describe Metafeta do
       end
 
       it "clears the metadata in the class its called in" do
-        DogFSub.metafeta_store.should == {:external_features => [:fur]}
+        DogHSub.metafeta_store.should == {:external_features => [:fur]}
       end
 
       it "does not clear the metadata in the superclass" do
-        DogF.metafeta_store.should == {:external_features => [:colour]}
+        DogH.metafeta_store.should == {:external_features => [:colour]}
       end
+    end
+  end
+
+  describe '.attributes_for_tag' do
+    before(:each) do
+      class DogI
+        include Metafeta
+        tag_attribute :colour, :fur, :as => :image_attributes
+      end
+    end
+
+    it "returns the attributes for a given tag" do
+      DogI.attributes_for_tag(:image_attributes).should == [:colour, :fur]
     end
   end
 end

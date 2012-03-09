@@ -76,6 +76,11 @@ module Metafeta
     def clear_tag(tag)
       metafeta_store.delete(tag)
     end
+
+    # Returs the attributes marked up with a given tag
+    def attributes_for_tag(tag)
+      metafeta_store[tag]
+    end
   end
 
   # Returns true if the field has the tag specified otherwise returns false
@@ -85,7 +90,7 @@ module Metafeta
 
   # Returs the attributes marked up with a given tag
   def attributes_for_tag(tag)
-    metafeta_store[tag]
+    self.class.attributes_for_tag(tag)
   end
 
   private
