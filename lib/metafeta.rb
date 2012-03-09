@@ -79,7 +79,7 @@ module Metafeta
 
     # Returs the attributes marked up with a given tag
     def attributes_for_tag(tag)
-      metafeta_store[tag]
+      metafeta_store[tag] || []
     end
   end
 

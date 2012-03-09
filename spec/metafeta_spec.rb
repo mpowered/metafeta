@@ -109,6 +109,12 @@ describe Metafeta do
     it "returns the attributes for a given tag" do
       DogF.new.attributes_for_tag(:image_attributes).should == [:colour, :fur]
     end
+
+    context "when there are no attributes for the tag" do
+      it "returns an empty array" do
+        DogF.new.attributes_for_tag(:monkey).should == []
+      end
+    end
   end
 
   describe '.add_metafeta' do
