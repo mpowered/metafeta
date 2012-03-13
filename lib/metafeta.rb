@@ -11,9 +11,7 @@ module Metafeta
 
   def self.included(klass)
     klass.extend(ClassMethods)
-    klass.instance_eval do
-      @_metafeta_store = {}
-    end
+    klass.load_metadata
   end
 
   module ClassMethods
@@ -80,6 +78,15 @@ module Metafeta
     # Returs the attributes marked up with a given tag
     def attributes_for_tag(tag)
       metafeta_store[tag] || []
+    end
+
+    # Loads the metadata for this class from apps/metadata
+    def load_metadata
+      @_metafeta_store ||= {} # Note, this is an instance variable in the class singleton object.
+      begin
+        require RAILS_ROOT + '/app/metadata/' + self.class_name.to_s.underscore + '.rb'
+      rescue MissingSourceFile
+      end
     end
   end
 
