@@ -84,7 +84,7 @@ module Metafeta
     def load_metadata
       @_metafeta_store ||= {} # Note, this is an instance variable in the class singleton object.
       begin
-        require RAILS_ROOT + '/app/metadata/' + self.class_name.to_s.underscore + '.rb'
+        load RAILS_ROOT + '/app/metadata/' + self.class_name.to_s.underscore + '.rb'
       rescue MissingSourceFile
       end
     end
