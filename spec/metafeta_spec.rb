@@ -4,12 +4,6 @@ require 'active_support/core_ext'
 
 RAILS_ROOT = './spec/assets'
 
-class Class
-  def class_name
-    name.underscore
-  end
-end
-
 describe Metafeta do
   describe '#tag_attribute' do
     before(:each) do
@@ -76,10 +70,10 @@ describe Metafeta do
       before(:each) do
         class DogEA
           include Metafeta
-          tag_attribute :name, :as => :identifying
         end
 
-        class DogEASub < DogEA; end
+        class DogEASub < DogEA
+        end
       end
 
       it "inherits it's superclass's metadata" do
@@ -91,11 +85,9 @@ describe Metafeta do
       before(:each) do
         class DogEB
           include Metafeta
-          tag_attribute :name, :as => :identifying
         end
 
         class DogEBSub < DogEB
-          tag_attribute :colour, :as => :identifying
         end
       end
 
