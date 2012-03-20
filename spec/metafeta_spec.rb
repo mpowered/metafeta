@@ -1,4 +1,14 @@
 require 'lib/metafeta.rb'
+require 'rubygems'
+require 'active_support/core_ext'
+
+RAILS_ROOT = './spec/assets'
+
+class Class
+  def class_name
+    name.underscore
+  end
+end
 
 describe Metafeta do
   describe '#tag_attribute' do
@@ -8,6 +18,7 @@ describe Metafeta do
         tag_attribute :colour, :hair_type, :snout_length, :as => [:external_features, :identifying_features]
       end
     end
+
     it "adds tags to the fields specified" do
       DogA.new.attribute_tagged_with?(:colour, :identifying_features).should be_true
     end
