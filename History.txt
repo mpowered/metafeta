@@ -1,0 +1,2 @@
+0.1
+* Employ deep cloning to make inheritance more robust
