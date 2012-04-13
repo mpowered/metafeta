@@ -12,7 +12,7 @@ module Metafeta
   def self.included(klass)
     klass.extend(ClassMethods)
     klass.instance_eval do
-      @_metafeta_store = {} # Note, this is an instance variable in the class singleton object.
+      @_metafeta_store = {} # Note, this is an instance variable in the class object.
     end
     klass.load_metadata
   end
@@ -70,7 +70,14 @@ module Metafeta
       # 1. Copying the parent's store
       # 2. Running its own metadata spec (if it exists).
       if instance_variable_get(:@_metafeta_store).nil?
-        instance_variable_set(:@_metafeta_store, superclass.metafeta_store.dup)
+        # Deep clone the parent's store. A simple #dup on the store won't suffice
+        # since the attributes are stored in an array. #dup only performs a shallow copy.
+        new_store = {}
+        superclass.metafeta_store.each do |tag, attributes|
+          new_store[tag] = attributes.dup
+        end
+
+        instance_variable_set(:@_metafeta_store, new_store)
         load_metadata
       end
       instance_variable_get(:@_metafeta_store)

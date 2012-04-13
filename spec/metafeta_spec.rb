@@ -1,4 +1,4 @@
-require 'lib/metafeta.rb'
+require 'metafeta.rb'
 require 'rubygems'
 require 'active_support/core_ext'
 
@@ -96,6 +96,8 @@ describe Metafeta do
       end
 
       it "does not mix the subclass metadata into the superclass's metadata" do
+        DogEBSub.instance_variable_set(:@_metafeta_store, nil) # To ensure previous test left no metadata behind.
+        DogEBSub.metafeta_store # Run subclass's store so that it may interfere with parent's store.
         DogEB.metafeta_store.should == {:identifying => [:name]}
       end
     end
