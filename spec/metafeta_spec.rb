@@ -2,7 +2,11 @@ require 'metafeta.rb'
 require 'rubygems'
 require 'active_support/core_ext'
 
-RAILS_ROOT = './spec/assets'
+module Rails
+  def self.root
+    './spec/assets'
+  end
+end
 
 describe Metafeta do
   describe '#tag_attribute' do

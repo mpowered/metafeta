@@ -97,7 +97,7 @@ module Metafeta
     # Loads the metadata for this class from apps/metadata
     def load_metadata
       begin
-        load RAILS_ROOT + '/app/metadata/' + self.name.to_s.underscore + '.rb'
+        load Rails.root.to_s + '/app/metadata/' + self.name.to_s.underscore + '_metadata.rb'
       rescue MissingSourceFile
       end
     end
